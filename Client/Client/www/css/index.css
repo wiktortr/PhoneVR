@@ -24,3 +24,11 @@ body {
     font-size: 20px;
     color: #fff;
 }
+
+#char {
+    min-height: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    width: 100% !important;
+    background-color: #fff;
+}
