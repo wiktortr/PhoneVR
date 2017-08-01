@@ -25,6 +25,52 @@ int main() {
 	if (GLenum err = glewInit() != GLEW_OK)
 		cout << "GLEW init error: " << (char*)glewGetErrorString(err) << endl;
 
+	//Init net socket
+	if (NetInit() != NET_OK)
+		cout << "Error init net" << endl;
+
+	//Create main socket
+	NetSocket mainSocket = NetSocketInit(NET_PROTO_TCP);
+	if (mainSocket == NET_INVALID_SOCKET) {
+		cout << "Error creating socket: " << WSAGetLastError() << endl;
+		WSACleanup();
+	}
+	else
+		cout << "Socket Created ok" << endl;
+
+
+	//Create service
+	NetSocketAddr service = NetInitSocketAddr("127.0.0.1", 27015);
+
+
+	//Bind soocket and service
+	if (NetBind(mainSocket, service) == NET_ERROR) {
+		cout << "Error bind socket" << endl;
+		closesocket(mainSocket);
+	}
+	else
+		cout << "Bind ok" << endl;
+
+
+	//Listen
+	if (NetListen(mainSocket) == NET_ERROR)
+		cout << "Error listening on socket" << endl;
+	else
+		cout << "ok listen on socket" << endl;
+
+
+	//waiting for client
+	NetSocket acceptSocket = NET_ERROR;
+	cout << "Waiting for a client to connect..." << endl;
+
+	while (acceptSocket == NET_ERROR) {
+		acceptSocket = NetAccept(mainSocket);
+	}
+
+	cout << "Client connected" << endl;
+	NetSocket old_main_socket = mainSocket;
+	mainSocket = acceptSocket;
+
 	while (!glfwWindowShouldClose(win)){
 		glClearColor(0.25, 0.25, 0.60, 1.00);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -42,7 +88,28 @@ int main() {
 		//	}
 		//}
 
-		cout << buffer_size << endl;
+		//string out_data = "{size: "+to_string(buffer_size)+"}";
+
+		//int result = NetWrite(mainSocket, out_data.c_str(), out_data.size());
+		int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
+		if (result == NET_ERROR) {
+			acceptSocket = NET_ERROR;
+			mainSocket = old_main_socket;
+			cout << "Waiting for a client to connect..." << endl;
+
+			while (acceptSocket == NET_ERROR) {
+				acceptSocket = NetAccept(mainSocket);
+			}
+
+			cout << "Client connected" << endl;
+			mainSocket = acceptSocket;
+		}
+		//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
+		//cout << result << endl;
+
+		delete color_buffer;
+
+		/*cout << buffer_size << endl;
 		cout << LZ4_compressBound(buffer_size) << endl;
 
 		char* out_put = new char[LZ4_compressBound(buffer_size)];
@@ -50,7 +117,7 @@ int main() {
 
 		cout << byte_return << endl;
 
-		system("pause");
+		system("pause");*/
 		glfwPollEvents();
 		glfwSwapBuffers(win);
 	}
