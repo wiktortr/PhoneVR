@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "net.h"
+#include "net.hpp"
 
 using namespace std;
 
@@ -11,7 +11,6 @@ int main() {
 
 	if (NetInit() != NET_OK)
 		cout << "Error init net" << endl;
-
 
 	//Create main socket
 	NetSocket mainSocket = NetSocketInit(NET_PROTO_TCP);
@@ -37,7 +36,7 @@ int main() {
 
 
 	//Listen
-	if (NetListen(mainSocket,1) == NET_ERROR)
+	if (NetListen(mainSocket) == NET_ERROR)
 		cout << "Error listening on socket" << endl;
 	else
 		cout << "ok listen on socket" << endl;

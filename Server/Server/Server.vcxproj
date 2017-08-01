@@ -151,10 +151,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="net.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="net.h" />
+    <ClInclude Include="net.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -28,8 +28,27 @@ typedef net_uint8		 net_byte;
 
 // -------------------------------------------------------------------------------------------------------------------------- //
 
+//Defines
+#define NET_OK 0
+#define NET_ERROR -1
 
-//Includes
+// -------------------------------------------------------------------------------------------------------------------------- //
+
+//Variables
+extern int _net_machine_status = NET_ERROR;
+extern int _net_machine_status_last_function = NET_ERROR;
+
+// -------------------------------------------------------------------------------------------------------------------------- //
+
+//Functions
+int NetInit();
+int NetDeInit();
+int NetCheckError();
+const char* NetGetLocalIP();
+
+
+// -------------------------------------------------------------------------------------------------------------------------- //
+
 #if defined(_WIN32) || defined(_WIN64)
 
 
@@ -37,6 +56,7 @@ typedef net_uint8		 net_byte;
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <WinSock2.h>
+#include <ws2tcpip.h>
 
 
 //Defines
@@ -64,8 +84,64 @@ typedef sockaddr_in NetSocketAddr;
 
 //Functions
 NetSocketAddr& NetInitSocketAddr(const char* ip, net_uint16 port);
-NetSocket NetAcceptGetClient(NetSocket socket, NetSocketAddr& client);
+NetSocket NetAcceptAndGetClient(NetSocket socket, NetSocketAddr& client);
 void NetGetSocketAddr(NetSocketAddr socket, const char*& ip, net_uint16& port);
+
+
+//Body function
+int NetInit() {
+	WSADATA wsaData;
+	int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (result == NO_ERROR) {
+		_net_machine_status = NET_OK;
+		return NET_OK;
+	}
+	else {
+		_net_machine_status = NET_ERROR;
+		_net_machine_status_last_function = WSAGetLastError();
+		return NET_ERROR;
+	}
+}
+
+int NetDeInit() {
+	WSACleanup();
+	return NET_OK;
+}
+
+const char* NetGetLocalIP() {
+	char ac[80];
+	if (gethostname(ac, sizeof(ac)) == SOCKET_ERROR)
+		return "";
+
+	struct hostent *phe = gethostbyname(ac);
+	if (phe == 0)
+		return "";
+
+	for (int i = 0; phe->h_addr_list[i] != 0; ++i) {
+		struct in_addr addr;
+		memcpy(&addr, phe->h_addr_list[i], sizeof(struct in_addr));
+		return inet_ntoa(addr);
+	}
+}
+
+NetSocketAddr& NetInitSocketAddr(const char* ip, net_uint16 port) {
+	NetSocketAddr service;
+	memset(&service, 0, sizeof(service));
+	service.sin_family = AF_INET;
+	service.sin_addr.S_un.S_addr = inet_addr(ip);
+	service.sin_port = htons(port);
+	return service;
+}
+
+NetSocket NetAcceptAndGetClient(NetSocket socket, NetSocketAddr& client) {
+	int addrsize = sizeof(client);
+	return accept(socket, (struct sockaddr*)&client, &addrsize);
+}
+
+void NetGetSocketAddr(NetSocketAddr socket, const char*& ip, net_uint16& port) {
+	ip = inet_ntoa(socket.sin_addr);
+	port = socket.sin_port;
+}
 
 
 #elif defined(__APPLE__)
@@ -81,19 +157,17 @@ void NetGetSocketAddr(NetSocketAddr socket, const char*& ip, net_uint16& port);
 #error Unknow copiler
 #endif
 
-// -------------------------------------------------------------------------------------------------------------------------- //
 
-//Defines
-#define NET_OK 0
-#define NET_ERROR -1
 
-// -------------------------------------------------------------------------------------------------------------------------- //
+//Boby function
 
-//Functions
-int NetInit();
-int NetDeInit();
-int NetCheckError();
-const char* NetGetErrorString();
+int NetCheckError() {
+	if (_net_machine_status != NET_OK)
+		return _net_machine_status_last_function;
+	else
+		return NET_OK;
+}
+
 
 
 #endif // !_NET
