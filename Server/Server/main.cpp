@@ -1,8 +1,7 @@
 #include <iostream>
 #include <string>
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include <WinSock2.h>
+#include "net.h"
 
 using namespace std;
 
@@ -10,18 +9,13 @@ using namespace std;
 
 int main() {
 
-	//create wsaData
-	WSADATA wsaData;
-	int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
-	if (result != NO_ERROR)
-		cout << "Init Error" << endl;
-	else
-		cout << "Init ok" << endl;
+	if (NetInit() != NET_OK)
+		cout << "Error init net" << endl;
 
 
 	//Create main socket
-	SOCKET mainSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (mainSocket == INVALID_SOCKET) {
+	NetSocket mainSocket = NetSocketInit(NET_PROTO_TCP);
+	if (mainSocket == NET_INVALID_SOCKET) {
 		cout << "Error creating socket: " << WSAGetLastError() << endl;
 		WSACleanup();
 	}
@@ -30,15 +24,11 @@ int main() {
 
 
 	//Create service
-	sockaddr_in service;
-	memset(&service, 0, sizeof(service));
-	service.sin_family = AF_INET;
-	service.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
-	service.sin_port = htons(27015);
+	NetSocketAddr service = NetInitSocketAddr("127.0.0.1", 27015);
 
 
 	//Bind soocket and service
-	if (bind(mainSocket, (SOCKADDR*)&service, sizeof(service)) == SOCKET_ERROR) {
+	if (NetBind(mainSocket, service) == NET_ERROR) {
 		cout << "Error bind socket" << endl;
 		closesocket(mainSocket);
 	}
@@ -47,18 +37,20 @@ int main() {
 
 
 	//Listen
-	if (listen(mainSocket, 1) == SOCKET_ERROR)
+	if (NetListen(mainSocket,1) == NET_ERROR)
 		cout << "Error listening on socket" << endl;
 	else
 		cout << "ok listen on socket" << endl;
 
 
 	//waiting for client
-	SOCKET acceptSocket = SOCKET_ERROR;
+	SOCKET acceptSocket = NET_ERROR;
 	cout << "Waiting for a client to connect..." << endl;
 
-	while (acceptSocket == SOCKET_ERROR)
-		acceptSocket = accept(mainSocket, NULL, NULL);
+	while (acceptSocket == NET_ERROR) {
+		acceptSocket = NetAccept(mainSocket);
+	}
+
 
 	cout << "Client connected" << endl;
 	mainSocket = acceptSocket;
@@ -76,10 +68,9 @@ int main() {
 	//Send data
 	for (int i = 0; i < 1000; i++){
 		string message = to_string(i) + ". Data send";
-		if (send(mainSocket, message.c_str(), message.size(), 0) < 0)
-			cout << "Error send data" << endl;
-		else
-			cout << "Send data" << endl;
+		int out = NetWrite(mainSocket, message.c_str(), message.size());
+		cout << out << endl;
+		//	cout << "Error send data" << endl;
 	}
 	
 
