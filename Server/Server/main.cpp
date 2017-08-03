@@ -40,7 +40,7 @@ int main() {
 
 
 	//Create service
-	NetSocketAddr service = NetInitSocketAddr("127.0.0.1", 27015);
+	NetSocketAddr service = NetInitSocketAddr(NetGetLocalIP(), 27015);
 
 
 	//Bind soocket and service
@@ -91,7 +91,14 @@ int main() {
 		//string out_data = "{size: "+to_string(buffer_size)+"}";
 
 		//int result = NetWrite(mainSocket, out_data.c_str(), out_data.size());
-		int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
+		
+
+		char* out_put = new char[LZ4_compressBound(buffer_size)];
+		int byte_return = LZ4_compress_default((char*)color_buffer, out_put, buffer_size, LZ4_compressBound(buffer_size));
+
+
+		//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
+		int result = NetWrite(mainSocket, out_put, byte_return);
 		if (result == NET_ERROR) {
 			acceptSocket = NET_ERROR;
 			mainSocket = old_main_socket;
@@ -103,6 +110,10 @@ int main() {
 
 			cout << "Client connected" << endl;
 			mainSocket = acceptSocket;
+		}
+		else {
+			cout << "Size: " << byte_return << endl;
+			cout << "R: " << result << endl;
 		}
 		//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
 		//cout << result << endl;
