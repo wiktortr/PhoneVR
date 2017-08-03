@@ -7,148 +7,152 @@
 
     document.addEventListener( 'deviceready', onDeviceReady.bind( this ), false );
 
-    window.addEventListener("devicemotion", deviceMotionUpdate, true);
+    //window.addEventListener("devicemotion", deviceMotionUpdate, true);
 
 
-    var pos = 0;
-    var last_a_x = 0;
-    var last_a_y = 0;
-    var last_a_z = 0;
+    //var pos = 0;
+    //var last_a_x = 0;
+    //var last_a_y = 0;
+    //var last_a_z = 0;
 
-    var last_m_x = 0;
-    var last_m_y = 0;
-    var last_m_z = 0;
+    //var last_m_x = 0;
+    //var last_m_y = 0;
+    //var last_m_z = 0;
 
-    var last_g_x = 0;
-    var last_g_y = 0;
-    var last_g_z = 0;
+    //var last_g_x = 0;
+    //var last_g_y = 0;
+    //var last_g_z = 0;
 
-    var global_m_x = 0;
-    var global_m_y = 0;
-    var global_m_z = 0;
+    //var global_m_x = 0;
+    //var global_m_y = 0;
+    //var global_m_z = 0;
 
-    function deviceMotionUpdate(e) {
+    //function deviceMotionUpdate(e) {
 
-        var c = document.getElementById("char");
-        var ctx = c.getContext("2d");
+    //    var c = document.getElementById("char");
+    //    var ctx = c.getContext("2d");
 
-        var m_x = 0;
-        var m_y = 0;
-        var m_z = 0;
+    //    var m_x = 0;
+    //    var m_y = 0;
+    //    var m_z = 0;
 
-        var tmp_g_x = (e.accelerationIncludingGravity.x - e.acceleration.x) * 0.004;
-        var tmp_g_y = (e.accelerationIncludingGravity.y - e.acceleration.y) * 0.004;
-        var tmp_g_z = (e.accelerationIncludingGravity.z - e.acceleration.z) * 0.004;
+    //    var tmp_g_x = (e.accelerationIncludingGravity.x - e.acceleration.x) * 0.004;
+    //    var tmp_g_y = (e.accelerationIncludingGravity.y - e.acceleration.y) * 0.004;
+    //    var tmp_g_z = (e.accelerationIncludingGravity.z - e.acceleration.z) * 0.004;
 
-        var g_x = Math.atan2(tmp_g_x, tmp_g_z) * 180 / Math.PI;
-        var g_y = Math.atan2(tmp_g_y, tmp_g_z) * 180 / Math.PI;
-        var g_z = 0;
+    //    var g_x = Math.atan2(tmp_g_x, tmp_g_z) * 180 / Math.PI;
+    //    var g_y = Math.atan2(tmp_g_y, tmp_g_z) * 180 / Math.PI;
+    //    var g_z = 0;
 
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, c.height / 4 + last_a_x);
-        ctx.lineTo(pos, c.height / 4 + e.acceleration.x);
-        ctx.strokeStyle = '#ff0000';
-        ctx.stroke();
-
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, c.height / 4 + last_a_y);
-        ctx.lineTo(pos, c.height / 4 + e.acceleration.y);
-        ctx.strokeStyle = '#00ff00';
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, c.height / 4 + last_a_z);
-        ctx.lineTo(pos, c.height / 4 + e.acceleration.z);
-        ctx.strokeStyle = '#0000ff';
-        ctx.stroke();
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, c.height / 4 + last_a_x);
+    //    ctx.lineTo(pos, c.height / 4 + e.acceleration.x);
+    //    ctx.strokeStyle = '#ff0000';
+    //    ctx.stroke();
 
 
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, c.height / 4 + last_a_y);
+    //    ctx.lineTo(pos, c.height / 4 + e.acceleration.y);
+    //    ctx.strokeStyle = '#00ff00';
+    //    ctx.stroke();
 
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, c.height / 2 + last_m_x);
-        ctx.lineTo(pos, c.height / 2 + global_m_x);
-        ctx.strokeStyle = '#ff0000';
-        ctx.stroke();
-
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, c.height / 2 + last_m_y);
-        ctx.lineTo(pos, c.height / 2 + global_m_y);
-        ctx.strokeStyle = '#00ff00';
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, c.height / 2 + last_m_z);
-        ctx.lineTo(pos, c.height / 2 + global_m_z);
-        ctx.strokeStyle = '#0000ff';
-        ctx.stroke();
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, c.height / 4 + last_a_z);
+    //    ctx.lineTo(pos, c.height / 4 + e.acceleration.z);
+    //    ctx.strokeStyle = '#0000ff';
+    //    ctx.stroke();
 
 
 
 
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, (c.height - c.height / 4) - last_g_x);
-        ctx.lineTo(pos, (c.height - c.height / 4) - g_x);
-        ctx.strokeStyle = '#ff0000';
-        ctx.stroke();
-
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, (c.height - c.height / 4) - last_g_y);
-        ctx.lineTo(pos, (c.height - c.height / 4) - g_y);
-        ctx.strokeStyle = '#00ff00';
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(pos - 1, (c.height - c.height / 4) - last_g_z);
-        ctx.lineTo(pos, (c.height - c.height / 4) - g_z);
-        ctx.strokeStyle = '#0000ff';
-        ctx.stroke();
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, c.height / 2 + last_m_x);
+    //    ctx.lineTo(pos, c.height / 2 + global_m_x);
+    //    ctx.strokeStyle = '#ff0000';
+    //    ctx.stroke();
 
 
-        last_a_x = e.acceleration.x;
-        last_a_y = e.acceleration.y;
-        last_a_z = e.acceleration.z;
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, c.height / 2 + last_m_y);
+    //    ctx.lineTo(pos, c.height / 2 + global_m_y);
+    //    ctx.strokeStyle = '#00ff00';
+    //    ctx.stroke();
 
-        last_m_x = global_m_x;
-        last_m_y = global_m_y;
-        last_m_z = global_m_z;
-
-        last_g_x = g_x;
-        last_g_y = g_y;
-        last_g_z = g_z;
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, c.height / 2 + last_m_z);
+    //    ctx.lineTo(pos, c.height / 2 + global_m_z);
+    //    ctx.strokeStyle = '#0000ff';
+    //    ctx.stroke();
 
 
-        pos = pos + 1;
 
-        if (pos >= c.width) {
-            pos = 0;
-            ctx.clearRect(0, 0, c.width, c.height);
-        }
 
-        //$("#A-x").html("X: " + e.accelerationIncludingGravity.x);
-        //$("#A-y").html("Y: " + e.accelerationIncludingGravity.y);
-        //$("#A-z").html("Z: " + e.accelerationIncludingGravity.z);
-    }
+
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, (c.height - c.height / 4) - last_g_x);
+    //    ctx.lineTo(pos, (c.height - c.height / 4) - g_x);
+    //    ctx.strokeStyle = '#ff0000';
+    //    ctx.stroke();
+
+
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, (c.height - c.height / 4) - last_g_y);
+    //    ctx.lineTo(pos, (c.height - c.height / 4) - g_y);
+    //    ctx.strokeStyle = '#00ff00';
+    //    ctx.stroke();
+
+    //    ctx.beginPath();
+    //    ctx.moveTo(pos - 1, (c.height - c.height / 4) - last_g_z);
+    //    ctx.lineTo(pos, (c.height - c.height / 4) - g_z);
+    //    ctx.strokeStyle = '#0000ff';
+    //    ctx.stroke();
+
+
+    //    last_a_x = e.acceleration.x;
+    //    last_a_y = e.acceleration.y;
+    //    last_a_z = e.acceleration.z;
+
+    //    last_m_x = global_m_x;
+    //    last_m_y = global_m_y;
+    //    last_m_z = global_m_z;
+
+    //    last_g_x = g_x;
+    //    last_g_y = g_y;
+    //    last_g_z = g_z;
+
+
+    //    pos = pos + 1;
+
+    //    if (pos >= c.width) {
+    //        pos = 0;
+    //        ctx.clearRect(0, 0, c.width, c.height);
+    //    }
+
+    //    //$("#A-x").html("X: " + e.accelerationIncludingGravity.x);
+    //    //$("#A-y").html("Y: " + e.accelerationIncludingGravity.y);
+    //    //$("#A-z").html("Z: " + e.accelerationIncludingGravity.z);
+    //}
 
     function onDeviceReady() {
-        var c = document.getElementById("char");
-        var ctx = c.getContext("2d");
-        ctx.clearRect(0, 0, c.width, c.height);
+        //var c = document.getElementById("char");
+        //var ctx = c.getContext("2d");
+        //ctx.clearRect(0, 0, c.width, c.height);
 
-        var watchID = cordova.plugins.magnetometer.watchReadings(
-            function success(reading) {
-                global_m_x = reading.x;
-                global_m_y = reading.y;
-                global_m_z = reading.z;
-            },
-            function error(message) {
-                console.log(message);
-            }
-        )
+        //var watchID = cordova.plugins.magnetometer.watchReadings(
+        //    function success(reading) {
+        //        global_m_x = reading.x;
+        //        global_m_y = reading.y;
+        //        global_m_z = reading.z;
+        //    },
+        //    function error(message) {
+        //        console.log(message);
+        //    }
+        //)
+
+        var net = require('net');
+        alert("ok");
+
 
         //document.addEventListener( 'pause', onPause.bind( this ), false );
         //document.addEventListener( 'resume', onResume.bind( this ), false );
