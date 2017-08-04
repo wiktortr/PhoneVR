@@ -81,64 +81,10 @@ int main() {
 		suma_kontrolna += i;
 	}
 
-	while (1){
-		//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
-		int result = NetWrite(mainSocket, data, size_data);
-		/*if (result == NET_ERROR) {
-			acceptSocket = NET_ERROR;
-			mainSocket = old_main_socket;
-			cout << "Waiting for a client to connect..." << endl;
-
-			while (acceptSocket == NET_ERROR) {
-				acceptSocket = NetAccept(mainSocket);
-			}
-
-			cout << "Client connected" << endl;
-			mainSocket = acceptSocket;
-		}
-		else {
-			cout << "Size: " << size_data << endl;
-			cout << "suma kontrolna: " << suma_kontrolna << endl;
-			cout << "R: " << result << endl;
-		}*/
-	}
-
-	//glfwSwapInterval(0);
-
-	//while (!glfwWindowShouldClose(win)){
-	//	glClearColor(0.25, 0.25, 0.60, 1.00);
-	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//	/*glViewport(0, 0, width, height);
-
-	//	unsigned char* color_buffer = new unsigned char[3 * width * height];
-	//	unsigned int buffer_size = 3 * width*height;
-	//	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);*/
-
-	//	/*char* out_put = new char[2024];
-	//	LZ4_compress_fast((const char*)color_buffer, out_put, buffer_size, 2024, 0);
-
-	//	system("pause");*/
-
-	//	//for (int i = 0; i < height; i++){
-	//	//	for (int j = 0; j < width; j++){
-	//	//		unsigned int pos = 3 * ((height - i - 1) * width + j);
-	//	//		cout << (double)color_buffer[pos + 2] << endl;
-	//	//		//cout << double(color_buffer[i + j]) << endl;
-	//	//	}
-	//	//}
-
-	//	//string out_data = "{size: "+to_string(buffer_size)+"}";
-
-	//	//int result = NetWrite(mainSocket, out_data.c_str(), out_data.size());
-	//	
-
-	//	//char* out_put = new char[LZ4_compressBound(buffer_size)];
-	//	//int byte_return = LZ4_compress_default((char*)color_buffer, out_put, buffer_size, LZ4_compressBound(buffer_size));
-
-
+	//while (1){
 	//	//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
 	//	int result = NetWrite(mainSocket, data, size_data);
-	//	if (result == NET_ERROR) {
+	//	/*if (result == NET_ERROR) {
 	//		acceptSocket = NET_ERROR;
 	//		mainSocket = old_main_socket;
 	//		cout << "Waiting for a client to connect..." << endl;
@@ -154,27 +100,80 @@ int main() {
 	//		cout << "Size: " << size_data << endl;
 	//		cout << "suma kontrolna: " << suma_kontrolna << endl;
 	//		cout << "R: " << result << endl;
-	//	}
-	//	//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
-	//	//cout << result << endl;
-
-	//	//delete color_buffer;
-
-	//	/*cout << buffer_size << endl;
-	//	cout << LZ4_compressBound(buffer_size) << endl;
-
-	//	char* out_put = new char[LZ4_compressBound(buffer_size)];
-	//	int byte_return = LZ4_compress_default((char*)color_buffer, out_put, buffer_size, LZ4_compressBound(buffer_size));
-
-	//	cout << byte_return << endl;
-
-	//	system("pause");*/
-	//	glfwPollEvents();
-	//	glfwSwapBuffers(win);
+	//	}*/
 	//}
 
-	//glfwDestroyWindow(win);
-	//glfwTerminate();
+	glfwSwapInterval(0);
+
+	while (!glfwWindowShouldClose(win)){
+		glClearColor(0.25, 0.25, 0.60, 1.00);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glViewport(0, 0, width, height);
+
+		unsigned char* color_buffer = new unsigned char[3 * width * height];
+		unsigned int buffer_size = 3 * width*height;
+		glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, color_buffer);
+
+		/*char* out_put = new char[2024];
+		LZ4_compress_fast((const char*)color_buffer, out_put, buffer_size, 2024, 0);
+
+		system("pause");*/
+
+		//for (int i = 0; i < height; i++){
+		//	for (int j = 0; j < width; j++){
+		//		unsigned int pos = 3 * ((height - i - 1) * width + j);
+		//		cout << (double)color_buffer[pos + 2] << endl;
+		//		//cout << double(color_buffer[i + j]) << endl;
+		//	}
+		//}
+
+		//string out_data = "{size: "+to_string(buffer_size)+"}";
+
+		//int result = NetWrite(mainSocket, out_data.c_str(), out_data.size());
+		
+
+		char* out_put = new char[LZ4_compressBound(buffer_size)];
+		int byte_return = LZ4_compress_default((char*)color_buffer, out_put, buffer_size, LZ4_compressBound(buffer_size));
+
+
+		int result = NetWrite(mainSocket, out_put, byte_return);
+		if (result == NET_ERROR) {
+			acceptSocket = NET_ERROR;
+			mainSocket = old_main_socket;
+			cout << "Waiting for a client to connect..." << endl;
+
+			while (acceptSocket == NET_ERROR) {
+				acceptSocket = NetAccept(mainSocket);
+			}
+
+			cout << "Client connected" << endl;
+			mainSocket = acceptSocket;
+		}
+		else {
+			cout << "Size: " << byte_return << endl;
+			cout << "R: " << result << endl;
+		}
+		//int result = NetWrite(mainSocket, (const char*)color_buffer, buffer_size);
+		//cout << result << endl;
+
+		delete color_buffer;
+		delete out_put;
+
+		/*cout << buffer_size << endl;
+		cout << LZ4_compressBound(buffer_size) << endl;
+
+		char* out_put = new char[LZ4_compressBound(buffer_size)];
+		int byte_return = LZ4_compress_default((char*)color_buffer, out_put, buffer_size, LZ4_compressBound(buffer_size));
+
+		cout << byte_return << endl;
+
+		system("pause");*/
+		glfwPollEvents();
+		glfwSwapBuffers(win);
+	}
+
+	glfwDestroyWindow(win);
+	glfwTerminate();
 
 	////Init net socket
 	//if (NetInit() != NET_OK)
